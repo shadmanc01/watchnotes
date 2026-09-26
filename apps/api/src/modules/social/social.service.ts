@@ -2,6 +2,7 @@ import type {
   MediaType,
   SocialProfile,
   SocialViewerState,
+  TasteMatchResult,
 } from "@watchnotes/shared";
 import { getProfileByUsername } from "../profiles/profile.service.js";
 import {
@@ -13,6 +14,7 @@ import {
   listPublicRanking,
   saveMediaFromProfile,
 } from "./social.repository.js";
+import { calculateTasteMatch } from "./taste-match.algorithm.js";
 
 async function requireProfile(username: string) {
   const profile = await getProfileByUsername(username);
@@ -42,6 +44,25 @@ export async function getPublicProfileRanking(
 ) {
   const profile = await requireProfile(username);
   return listPublicRanking(profile.id, mediaType);
+}
+
+export async function getTasteMatch(
+  viewerUserId: string,
+  username: string,
+  mediaType: MediaType,
+): Promise<TasteMatchResult> {
+  const profile = await requireProfile(username);
+
+  if (profile.id === viewerUserId) {
+    throw new Error("Taste Match compares your ranking with another user.");
+  }
+
+  const [viewerEntries, targetEntries] = await Promise.all([
+    listPublicRanking(viewerUserId, mediaType),
+    listPublicRanking(profile.id, mediaType),
+  ]);
+
+  return calculateTasteMatch(mediaType, viewerEntries, targetEntries);
 }
 
 export async function getSocialViewerState(

@@ -5,6 +5,7 @@ import type {
   RankingEntry,
   SocialProfile,
   SocialViewerState,
+  TasteMatchResult,
 } from "@watchnotes/shared";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
@@ -14,10 +15,12 @@ import {
   getPublicRanking,
   getSocialProfile,
   getSocialViewer,
+  getTasteMatch,
   unfollowUser,
 } from "../api/social.api";
 import styles from "./PublicProfile.module.css";
 import { PublicRankingList } from "./PublicRankingList";
+import { TasteMatchPanel } from "./TasteMatchPanel";
 
 type PublicProfileScreenProps = {
   username: string;
@@ -41,8 +44,10 @@ export function PublicProfileScreen({
   const [viewer, setViewer] = useState<SocialViewerState>(signedOutViewer);
   const [mediaType, setMediaType] = useState<MediaType>("movie");
   const [entries, setEntries] = useState<RankingEntry[]>([]);
+  const [tasteMatch, setTasteMatch] = useState<TasteMatchResult | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRankingLoading, setIsRankingLoading] = useState(true);
+  const [isTasteLoading, setIsTasteLoading] = useState(false);
   const [isFollowSaving, setIsFollowSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -85,6 +90,28 @@ export function PublicProfileScreen({
   useEffect(() => {
     void loadRanking(mediaType);
   }, [loadRanking, mediaType]);
+
+  useEffect(() => {
+    if (!viewer.authenticated || viewer.isSelf) {
+      setTasteMatch(null);
+      setIsTasteLoading(false);
+      return;
+    }
+
+    setIsTasteLoading(true);
+
+    getTasteMatch(username, mediaType)
+      .then((response) => setTasteMatch(response.tasteMatch))
+      .catch((matchError) => {
+        setTasteMatch(null);
+        setError(
+          matchError instanceof Error
+            ? matchError.message
+            : "Unable to compare rankings.",
+        );
+      })
+      .finally(() => setIsTasteLoading(false));
+  }, [mediaType, username, viewer.authenticated, viewer.isSelf]);
 
   async function handleFollowToggle() {
     if (!socialProfile || !viewer.authenticated || viewer.isSelf) {
@@ -211,24 +238,34 @@ export function PublicProfileScreen({
         </p>
       ) : null}
 
+      <div className={styles.tabsTop}>
+        {(["movie", "tv"] as const).map((type) => (
+          <button
+            key={type}
+            type="button"
+            aria-pressed={mediaType === type}
+            onClick={() => {
+              setMediaType(type);
+              setError(null);
+            }}
+          >
+            {type === "movie" ? "Movies" : "TV Shows"}
+          </button>
+        ))}
+      </div>
+
+      <TasteMatchPanel
+        username={profile.username}
+        viewer={viewer}
+        tasteMatch={tasteMatch}
+        isLoading={isTasteLoading}
+      />
+
       <section className={styles.rankingSection}>
         <div className={styles.rankingHeader}>
           <div>
             <p className="page-kicker">Taste</p>
-            <h2>Rankings</h2>
-          </div>
-
-          <div className={styles.tabs}>
-            {(["movie", "tv"] as const).map((type) => (
-              <button
-                key={type}
-                type="button"
-                aria-pressed={mediaType === type}
-                onClick={() => setMediaType(type)}
-              >
-                {type === "movie" ? "Movies" : "TV Shows"}
-              </button>
-            ))}
+            <h2>{mediaType === "movie" ? "Movie" : "TV"} ranking</h2>
           </div>
         </div>
 
