@@ -14,4 +14,9 @@ export type {
   RankingSessionCompleted,
   RankingSessionResult,
 } from "./ranking.js";
-export type { SocialProfile, SocialViewerState } from "./social.js";
+export type {
+  SocialProfile,
+  SocialViewerState,
+  TasteMatchResult,
+  TasteMatchTitle,
+} from "./social.js";

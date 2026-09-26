@@ -3,6 +3,7 @@ import type {
   RankingEntry,
   SocialProfile,
   SocialViewerState,
+  TasteMatchResult,
 } from "@watchnotes/shared";
 
 type ApiError = {
@@ -56,6 +57,12 @@ export function getSocialViewer(username: string) {
 export function getPublicRanking(username: string, type: MediaType) {
   return request<{ entries: RankingEntry[] }>(
     `/social/profiles/${encodeURIComponent(username)}/rankings/${type}`,
+  );
+}
+
+export function getTasteMatch(username: string, type: MediaType) {
+  return request<{ tasteMatch: TasteMatchResult }>(
+    `/social/profiles/${encodeURIComponent(username)}/taste-match/${type}`,
   );
 }
 

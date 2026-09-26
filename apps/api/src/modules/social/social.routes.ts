@@ -6,6 +6,7 @@ import {
   getPublicProfileRanking,
   getSocialProfile,
   getSocialViewerState,
+  getTasteMatch,
   saveFromProfileRanking,
   unfollowProfile,
 } from "./social.service.js";
@@ -104,6 +105,35 @@ export function registerSocialRoutes(app: FastifyInstance) {
         );
 
         return { entries };
+      } catch (error) {
+        return sendSocialError(request, reply, error);
+      }
+    },
+  );
+
+  app.get<{ Params: RankingParams }>(
+    "/social/profiles/:username/taste-match/:type",
+    async (request, reply) => {
+      const auth = await requireAuth(request, reply);
+
+      if (!auth) {
+        return;
+      }
+
+      const mediaType = parseMediaType(request.params.type);
+
+      if (!mediaType) {
+        return reply.status(400).send({ error: "Unknown ranking type." });
+      }
+
+      try {
+        const tasteMatch = await getTasteMatch(
+          auth.user.id,
+          request.params.username,
+          mediaType,
+        );
+
+        return { tasteMatch };
       } catch (error) {
         return sendSocialError(request, reply, error);
       }
