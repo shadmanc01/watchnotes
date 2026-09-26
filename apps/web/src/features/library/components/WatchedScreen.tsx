@@ -47,6 +47,8 @@ export function WatchedScreen() {
           <Link href="/discover">Find a title</Link>
           {" · "}
           <Link href="/watchlist">View watchlist</Link>
+          {" · "}
+          <Link href="/rank">Rank watched titles</Link>
         </p>
 
         {isLoading ? <p>Loading watched titles...</p> : null}

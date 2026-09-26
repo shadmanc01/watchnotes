@@ -14,6 +14,7 @@ export function HomeScreen() {
 
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
           <Link href="/discover">Discover</Link>
+          <Link href="/rank">Rank</Link>
           <Link href="/watched">Watched</Link>
           <Link href="/watchlist">Watchlist</Link>
           <Link href="/signup">Create account</Link>
