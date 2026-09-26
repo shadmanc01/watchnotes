@@ -7,5 +7,6 @@ export type MediaSummary = {
   title: string;
   releaseYear: number | null;
   posterUrl: string | null;
+  overview: string | null;
   runtimeMinutes: number | null;
 };

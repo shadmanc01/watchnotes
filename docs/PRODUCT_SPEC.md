@@ -13,7 +13,8 @@ watch -> compare -> rank -> comment -> share -> discover -> watch again
 ## MVP capabilities
 
 ### Media tracking
-- Search movies and TV through a third-party media catalog API.
+- Search movies and TV through TMDB.
+- The browser calls the Watchnotes API; TMDB credentials remain backend-only.
 - Mark movies and TV as watched.
 - Maintain separate movie and TV watchlists.
 - Add a personal comment/note to watched media.
@@ -56,6 +57,19 @@ Dynamic percentile badges:
 - Top 1%
 
 Only the highest qualifying badge should be displayed prominently.
+
+## Implementation milestones
+
+1. Project foundation
+2. TMDB-backed movie and TV search
+3. Authentication and profile persistence
+4. Watched/watchlist tracking
+5. Head-to-head ranking
+6. Comments/notes
+7. Social graph and feed
+8. Lifetime viewing-time aggregation
+9. Leaderboards and percentile badges
+10. Taste match and recommendation features
 
 ## Later capabilities
 
