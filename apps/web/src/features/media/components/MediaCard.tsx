@@ -1,4 +1,5 @@
 import type { MediaSummary } from "@watchnotes/shared";
+import { MediaActions } from "../../library/components/MediaActions";
 
 type MediaCardProps = {
   media: MediaSummary;
@@ -31,15 +32,19 @@ export function MediaCard({ media }: MediaCardProps) {
         )}
       </div>
 
-      <div>
-        <p style={{ margin: 0, fontSize: 12, textTransform: "uppercase" }}>
-          {media.type === "movie" ? "Movie" : "TV Show"}
-        </p>
-        <h2 style={{ margin: "4px 0" }}>
-          {media.title}
-          {media.releaseYear ? ` (${media.releaseYear})` : ""}
-        </h2>
-        {media.overview ? <p>{media.overview}</p> : null}
+      <div style={{ display: "grid", gap: 8 }}>
+        <div>
+          <p style={{ margin: 0, fontSize: 12, textTransform: "uppercase" }}>
+            {media.type === "movie" ? "Movie" : "TV Show"}
+          </p>
+          <h2 style={{ margin: "4px 0" }}>
+            {media.title}
+            {media.releaseYear ? ` (${media.releaseYear})` : ""}
+          </h2>
+          {media.overview ? <p>{media.overview}</p> : null}
+        </div>
+
+        <MediaActions media={media} />
       </div>
     </article>
   );

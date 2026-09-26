@@ -1,6 +1,14 @@
-import type { MediaSummary } from "@watchnotes/shared";
-import { mapTmdbSearchResult } from "./tmdb.mapper.js";
-import type { TmdbSearchResponse } from "./tmdb.types.js";
+import type { MediaSummary, MediaType } from "@watchnotes/shared";
+import {
+  mapTmdbMovieDetails,
+  mapTmdbSearchResult,
+  mapTmdbTvDetails,
+} from "./tmdb.mapper.js";
+import type {
+  TmdbMovieDetails,
+  TmdbSearchResponse,
+  TmdbTvDetails,
+} from "./tmdb.types.js";
 
 const TMDB_API_BASE_URL = "https://api.themoviedb.org/3";
 
@@ -14,6 +22,21 @@ function getReadAccessToken() {
   }
 
   return token;
+}
+
+async function tmdbFetch<T>(path: string): Promise<T> {
+  const response = await fetch(`${TMDB_API_BASE_URL}${path}`, {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${getReadAccessToken()}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`TMDB request failed with status ${response.status}.`);
+  }
+
+  return (await response.json()) as T;
 }
 
 export async function searchTmdb(query: string): Promise<MediaSummary[]> {
@@ -39,4 +62,21 @@ export async function searchTmdb(query: string): Promise<MediaSummary[]> {
   return payload.results
     .map(mapTmdbSearchResult)
     .filter((result): result is MediaSummary => result !== null);
+}
+
+export async function getTmdbMediaDetails(
+  type: MediaType,
+  providerId: number,
+): Promise<MediaSummary> {
+  if (type === "movie") {
+    const movie = await tmdbFetch<TmdbMovieDetails>(
+      `/movie/${providerId}?language=en-US`,
+    );
+    return mapTmdbMovieDetails(movie);
+  }
+
+  const show = await tmdbFetch<TmdbTvDetails>(
+    `/tv/${providerId}?language=en-US`,
+  );
+  return mapTmdbTvDetails(show);
 }
