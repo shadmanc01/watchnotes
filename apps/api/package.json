@@ -9,7 +9,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^11.1.0",
+    "@supabase/supabase-js": "^2.57.4",
     "@watchnotes/shared": "workspace:*",
     "dotenv": "^17.2.2",
     "fastify": "^5.6.0"
