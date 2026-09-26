@@ -9,6 +9,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@fastify/cors": "^11.1.0",
+    "@watchnotes/shared": "workspace:*",
     "fastify": "^5.6.0"
   },
   "devDependencies": {
