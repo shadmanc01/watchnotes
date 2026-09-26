@@ -17,19 +17,30 @@ export function AccountScreen() {
   if (!user) {
     return (
       <PageContainer>
-        <h1>You are not signed in.</h1>
-        <Link href="/login">Sign in</Link>
+        <section className="auth-shell">
+          <p className="page-kicker">Account</p>
+          <h1 className="page-title">You are not signed in.</h1>
+          <div className="inline-links">
+            <Link href="/login">Sign in</Link>
+          </div>
+        </section>
       </PageContainer>
     );
   }
 
   return (
     <PageContainer>
-      <section>
-        <p>Account</p>
-        <h1>{user.profile?.displayName ?? user.profile?.username ?? "Watchnotes user"}</h1>
-        {user.profile ? <p>@{user.profile.username}</p> : null}
-        <p>{user.email}</p>
+      <section className="account-card">
+        <p className="page-kicker">Account</p>
+        <h1>
+          {user.profile?.displayName ??
+            user.profile?.username ??
+            "Watchnotes user"}
+        </h1>
+        {user.profile ? (
+          <p className="account-card__meta">@{user.profile.username}</p>
+        ) : null}
+        <p className="account-card__meta">{user.email}</p>
 
         <button
           type="button"

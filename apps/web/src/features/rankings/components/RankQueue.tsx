@@ -12,41 +12,26 @@ export function RankQueue({ items, disabled, onStart }: RankQueueProps) {
   }
 
   return (
-    <div style={{ display: "grid", gap: 10 }}>
+    <div className="rank-queue">
       {items.map((item) => (
-        <article
-          key={item.media.id}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "56px 1fr auto",
-            gap: 12,
-            alignItems: "center",
-            padding: "10px 0",
-            borderBottom: "1px solid #ddd",
-          }}
-        >
+        <article className="rank-queue__item" key={item.media.id}>
           {item.media.posterUrl ? (
             <img
+              className="rank-queue__poster"
               src={item.media.posterUrl}
               alt=""
               width={56}
-              style={{
-                width: 56,
-                height: 84,
-                objectFit: "cover",
-                borderRadius: 4,
-              }}
             />
           ) : (
             <div
+              className="rank-queue__poster poster-placeholder"
               aria-hidden="true"
-              style={{ width: 56, height: 84, background: "#e8e8e8" }}
             />
           )}
 
           <div>
             <strong>{item.media.title}</strong>
-            <p style={{ margin: "4px 0 0" }}>
+            <p>
               {item.watchCount === 1
                 ? "Watched once"
                 : `Watched ${item.watchCount} times`}

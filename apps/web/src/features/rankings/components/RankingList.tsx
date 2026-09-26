@@ -10,45 +10,28 @@ export function RankingList({ entries }: RankingListProps) {
   }
 
   return (
-    <ol style={{ listStyle: "none", padding: 0, margin: 0 }}>
+    <ol className="ranking-list">
       {entries.map((entry) => (
-        <li
-          key={entry.media.id}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "48px 56px 1fr",
-            gap: 12,
-            alignItems: "center",
-            padding: "12px 0",
-            borderBottom: "1px solid #ddd",
-          }}
-        >
-          <strong style={{ fontSize: 22 }}>#{entry.position}</strong>
+        <li className="ranking-row" key={entry.media.id}>
+          <strong className="ranking-row__position">#{entry.position}</strong>
 
           {entry.media.posterUrl ? (
             <img
+              className="ranking-row__poster"
               src={entry.media.posterUrl}
               alt=""
               width={56}
-              style={{
-                width: 56,
-                height: 84,
-                objectFit: "cover",
-                borderRadius: 4,
-              }}
             />
           ) : (
             <div
+              className="ranking-row__poster poster-placeholder"
               aria-hidden="true"
-              style={{ width: 56, height: 84, background: "#e8e8e8" }}
             />
           )}
 
           <div>
             <strong>{entry.media.title}</strong>
-            {entry.media.releaseYear ? (
-              <p style={{ margin: "4px 0 0" }}>{entry.media.releaseYear}</p>
-            ) : null}
+            {entry.media.releaseYear ? <p>{entry.media.releaseYear}</p> : null}
           </div>
         </li>
       ))}

@@ -126,20 +126,20 @@ export function RankingScreen() {
 
   return (
     <PageContainer>
-      <section style={{ maxWidth: 900 }}>
-        <p>Rank</p>
-        <h1>Your taste, ordered.</h1>
-        <p>
+      <section>
+        <p className="page-kicker">Rank</p>
+        <h1 className="page-title">Your taste, ordered.</h1>
+        <p className="page-lede">
           Watchnotes uses head-to-head choices instead of star ratings. Each
           answer narrows down exactly where a title belongs.
         </p>
-        <p>
-          <Link href="/watched">Watched</Link>
-          {" · "}
-          <Link href="/discover">Discover</Link>
-        </p>
 
-        <div style={{ display: "flex", gap: 8, margin: "24px 0" }}>
+        <div className="inline-links">
+          <Link href="/watched">Watched</Link>
+          <Link href="/discover">Discover</Link>
+        </div>
+
+        <div className="ranking-toolbar">
           {(["movie", "tv"] as const).map((type) => (
             <button
               key={type}
@@ -156,8 +156,16 @@ export function RankingScreen() {
           ))}
         </div>
 
-        {error ? <p role="alert">{error}</p> : null}
-        {message ? <p role="status">{message}</p> : null}
+        {error ? (
+          <p className="status-message" role="alert">
+            {error}
+          </p>
+        ) : null}
+        {message ? (
+          <p className="status-message" role="status">
+            {message}
+          </p>
+        ) : null}
 
         {session ? (
           <ComparisonArena
@@ -170,20 +178,13 @@ export function RankingScreen() {
         {isLoading ? (
           <p>Loading ranking...</p>
         ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(0, 1fr) minmax(280px, 0.7fr)",
-              gap: 36,
-              alignItems: "start",
-            }}
-          >
-            <section>
+          <div className="ranking-layout">
+            <section className="ranking-panel">
               <h2>{getCategoryLabel(mediaType)} ranking</h2>
               <RankingList entries={entries} />
             </section>
 
-            <aside>
+            <aside className="ranking-panel">
               <h2>Ready to rank</h2>
               <RankQueue
                 items={unranked}

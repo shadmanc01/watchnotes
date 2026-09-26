@@ -7,41 +7,35 @@ type MediaCardProps = {
 
 export function MediaCard({ media }: MediaCardProps) {
   return (
-    <article
-      style={{
-        display: "grid",
-        gridTemplateColumns: "88px 1fr",
-        gap: 16,
-        padding: "16px 0",
-        borderBottom: "1px solid #ddd",
-      }}
-    >
+    <article className="media-card">
       <div>
         {media.posterUrl ? (
           <img
+            className="media-card__poster"
             src={media.posterUrl}
             alt=""
-            width={88}
-            style={{ width: 88, height: 132, objectFit: "cover" }}
+            width={96}
           />
         ) : (
           <div
+            className="media-card__poster poster-placeholder"
             aria-hidden="true"
-            style={{ width: 88, height: 132, background: "#e8e8e8" }}
           />
         )}
       </div>
 
-      <div style={{ display: "grid", gap: 8 }}>
+      <div className="media-card__body">
         <div>
-          <p style={{ margin: 0, fontSize: 12, textTransform: "uppercase" }}>
+          <p className="media-meta">
             {media.type === "movie" ? "Movie" : "TV Show"}
           </p>
-          <h2 style={{ margin: "4px 0" }}>
+          <h2 className="media-title">
             {media.title}
             {media.releaseYear ? ` (${media.releaseYear})` : ""}
           </h2>
-          {media.overview ? <p>{media.overview}</p> : null}
+          {media.overview ? (
+            <p className="media-description">{media.overview}</p>
+          ) : null}
         </div>
 
         <MediaActions media={media} />

@@ -13,19 +13,19 @@ export function MediaSearchForm({
 }: MediaSearchFormProps) {
   return (
     <form
+      className="search-form"
       onSubmit={(event) => {
         event.preventDefault();
         onSubmit();
       }}
     >
       <label htmlFor="media-search">Search movies and TV shows</label>
-      <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+      <div className="search-row">
         <input
           id="media-search"
           value={value}
           onChange={(event) => onChange(event.target.value)}
           placeholder="Try Interstellar or Breaking Bad"
-          style={{ flex: 1, padding: 12 }}
         />
         <button type="submit" disabled={isLoading || value.trim().length < 2}>
           {isLoading ? "Searching..." : "Search"}

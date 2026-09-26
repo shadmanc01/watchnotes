@@ -44,18 +44,18 @@ export function DiscoverScreen() {
 
   return (
     <PageContainer>
-      <section style={{ maxWidth: 760 }}>
-        <p>Discover</p>
-        <h1>Find something you watched.</h1>
-        <p>
+      <section className="content-narrow">
+        <p className="page-kicker">Discover</p>
+        <h1 className="page-title">Find something you watched.</h1>
+        <p className="page-lede">
           Search movies and TV shows, then mark them watched or save them for
           later.
         </p>
-        <p>
+
+        <div className="inline-links">
           <Link href="/watched">Watched</Link>
-          {" · "}
           <Link href="/watchlist">Watchlist</Link>
-        </p>
+        </div>
 
         <MediaSearchForm
           value={query}
@@ -64,7 +64,11 @@ export function DiscoverScreen() {
           onSubmit={handleSearch}
         />
 
-        {error ? <p role="alert">{error}</p> : null}
+        {error ? (
+          <p className="status-message" role="alert">
+            {error}
+          </p>
+        ) : null}
 
         <MediaSearchResults results={results} hasSearched={hasSearched} />
       </section>
