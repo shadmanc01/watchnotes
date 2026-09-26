@@ -16,6 +16,7 @@ export function buildApp() {
   void app.register(cookie);
   void app.register(cors, {
     credentials: true,
+    methods: ["GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"],
     origin: process.env.WEB_ORIGIN ?? "http://localhost:3000",
   });
 

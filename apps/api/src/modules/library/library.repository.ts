@@ -1,6 +1,8 @@
 import type {
+  MediaNote,
   MediaSummary,
   WatchedItem,
+  WatchEventSummary,
   WatchlistItem,
 } from "@watchnotes/shared";
 import { createAuthenticatedSupabaseClient } from "../../integrations/supabase/supabase.client.js";
@@ -26,6 +28,17 @@ type WatchEventJoinRow = {
   watched_at: string;
   runtime_minutes: number | null;
   media_titles: MediaTitleRow | MediaTitleRow[] | null;
+};
+
+type WatchEventRow = {
+  watched_at: string;
+  runtime_minutes: number | null;
+  is_rewatch: boolean;
+};
+
+type MediaNoteRow = {
+  body: string;
+  updated_at: string;
 };
 
 function getJoinedMedia(
@@ -81,6 +94,26 @@ export async function upsertMediaTitle(
   }
 
   return data.id;
+}
+
+export async function getMediaTitleById(
+  accessToken: string,
+  mediaId: string,
+): Promise<MediaSummary | null> {
+  const supabase = createAuthenticatedSupabaseClient(accessToken);
+  const { data, error } = await supabase
+    .from("media_titles")
+    .select(
+      "id, tmdb_id, media_type, title, release_year, poster_url, overview, runtime_minutes",
+    )
+    .eq("id", mediaId)
+    .maybeSingle<MediaTitleRow>();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data ? mapMedia(data) : null;
 }
 
 export async function addWatchlistItem(
@@ -160,6 +193,146 @@ export async function addWatchEvent(
     runtime_minutes: input.runtimeMinutes,
     is_rewatch: input.isRewatch,
   });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function listWatchEventsForMedia(
+  accessToken: string,
+  userId: string,
+  mediaId: string,
+): Promise<WatchEventSummary[]> {
+  const supabase = createAuthenticatedSupabaseClient(accessToken);
+  const { data, error } = await supabase
+    .from("watch_events")
+    .select("watched_at, runtime_minutes, is_rewatch")
+    .eq("user_id", userId)
+    .eq("media_id", mediaId)
+    .order("watched_at", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return ((data ?? []) as WatchEventRow[]).map((row) => ({
+    watchedAt: row.watched_at,
+    runtimeMinutes: row.runtime_minutes,
+    isRewatch: row.is_rewatch,
+  }));
+}
+
+export async function getRankingPositionForMedia(
+  accessToken: string,
+  userId: string,
+  mediaId: string,
+) {
+  const supabase = createAuthenticatedSupabaseClient(accessToken);
+  const { data, error } = await supabase
+    .from("ranking_entries")
+    .select("position")
+    .eq("user_id", userId)
+    .eq("media_id", mediaId)
+    .maybeSingle<{ position: number }>();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data?.position ?? null;
+}
+
+export async function isMediaOnWatchlist(
+  accessToken: string,
+  userId: string,
+  mediaId: string,
+) {
+  const supabase = createAuthenticatedSupabaseClient(accessToken);
+  const { data, error } = await supabase
+    .from("watchlist_items")
+    .select("media_id")
+    .eq("user_id", userId)
+    .eq("media_id", mediaId)
+    .maybeSingle<{ media_id: string }>();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return Boolean(data);
+}
+
+export async function getMediaNote(
+  accessToken: string,
+  userId: string,
+  mediaId: string,
+): Promise<MediaNote | null> {
+  const supabase = createAuthenticatedSupabaseClient(accessToken);
+  const { data, error } = await supabase
+    .from("user_media_notes")
+    .select("body, updated_at")
+    .eq("user_id", userId)
+    .eq("media_id", mediaId)
+    .maybeSingle<MediaNoteRow>();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data
+    ? {
+        body: data.body,
+        updatedAt: data.updated_at,
+      }
+    : null;
+}
+
+export async function upsertMediaNote(
+  accessToken: string,
+  userId: string,
+  mediaId: string,
+  body: string,
+): Promise<MediaNote> {
+  const supabase = createAuthenticatedSupabaseClient(accessToken);
+  const updatedAt = new Date().toISOString();
+  const { data, error } = await supabase
+    .from("user_media_notes")
+    .upsert(
+      {
+        user_id: userId,
+        media_id: mediaId,
+        body,
+        updated_at: updatedAt,
+      },
+      {
+        onConflict: "user_id,media_id",
+      },
+    )
+    .select("body, updated_at")
+    .single<MediaNoteRow>();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return {
+    body: data.body,
+    updatedAt: data.updated_at,
+  };
+}
+
+export async function deleteMediaNote(
+  accessToken: string,
+  userId: string,
+  mediaId: string,
+) {
+  const supabase = createAuthenticatedSupabaseClient(accessToken);
+  const { error } = await supabase
+    .from("user_media_notes")
+    .delete()
+    .eq("user_id", userId)
+    .eq("media_id", mediaId);
 
   if (error) {
     throw new Error(error.message);

@@ -1,6 +1,9 @@
 export type {
   LibraryMediaReference,
+  LibraryTitleDetail,
+  MediaNote,
   WatchedItem,
+  WatchEventSummary,
   WatchlistItem,
 } from "./library.js";
 export type { MediaSummary, MediaType } from "./media.js";
