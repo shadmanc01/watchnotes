@@ -30,6 +30,15 @@ Install dependencies:
 pnpm install
 ```
 
+Create local environment files:
+
+```bash
+cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env.local
+```
+
+Add your TMDB API Read Access Token to `apps/api/.env`.
+
 Run the frontend and backend together:
 
 ```bash
@@ -39,10 +48,9 @@ pnpm dev
 Default local URLs:
 
 - Web: http://localhost:3000
+- Discover/search: http://localhost:3000/discover
 - API: http://localhost:4000
 - API health check: http://localhost:4000/health
-
-Copy `.env.example` to the appropriate local environment files before adding external integrations.
 
 ## Engineering principles
 
