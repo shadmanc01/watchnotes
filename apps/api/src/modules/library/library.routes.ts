@@ -2,15 +2,26 @@ import type { LibraryMediaReference, MediaType } from "@watchnotes/shared";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { getRequestAuth } from "../auth/auth.request.js";
 import {
+  getLibraryTitleDetail,
   getWatched,
   getWatchlist,
   markAsWatched,
+  removeMediaNote,
+  saveMediaNote,
   saveToWatchlist,
 } from "./library.service.js";
 
 type LibraryBody = {
   providerId?: number;
   type?: MediaType;
+};
+
+type MediaParams = {
+  mediaId: string;
+};
+
+type NoteBody = {
+  body?: string;
 };
 
 function getMediaReference(body: LibraryBody): LibraryMediaReference | null {
@@ -40,6 +51,20 @@ async function requireAuth(request: FastifyRequest, reply: FastifyReply) {
   return auth;
 }
 
+function sendLibraryError(
+  request: FastifyRequest,
+  reply: FastifyReply,
+  error: unknown,
+) {
+  request.log.warn(error);
+  const message =
+    error instanceof Error ? error.message : "Unable to update your library.";
+
+  return reply.status(message === "Title not found." ? 404 : 400).send({
+    error: message,
+  });
+}
+
 export function registerLibraryRoutes(app: FastifyInstance) {
   app.get("/library/watchlist", async (request, reply) => {
     const auth = await requireAuth(request, reply);
@@ -62,6 +87,82 @@ export function registerLibraryRoutes(app: FastifyInstance) {
     const items = await getWatched(auth.accessToken, auth.user.id);
     return { items };
   });
+
+  app.get<{ Params: MediaParams }>(
+    "/library/titles/:mediaId",
+    async (request, reply) => {
+      const auth = await requireAuth(request, reply);
+
+      if (!auth) {
+        return;
+      }
+
+      try {
+        const detail = await getLibraryTitleDetail(
+          auth.accessToken,
+          auth.user.id,
+          request.params.mediaId,
+        );
+
+        return { detail };
+      } catch (error) {
+        return sendLibraryError(request, reply, error);
+      }
+    },
+  );
+
+  app.put<{ Params: MediaParams; Body: NoteBody }>(
+    "/library/titles/:mediaId/note",
+    async (request, reply) => {
+      const auth = await requireAuth(request, reply);
+
+      if (!auth) {
+        return;
+      }
+
+      if (typeof request.body.body !== "string") {
+        return reply.status(400).send({
+          error: "A note body is required.",
+        });
+      }
+
+      try {
+        const note = await saveMediaNote(
+          auth.accessToken,
+          auth.user.id,
+          request.params.mediaId,
+          request.body.body,
+        );
+
+        return { note };
+      } catch (error) {
+        return sendLibraryError(request, reply, error);
+      }
+    },
+  );
+
+  app.delete<{ Params: MediaParams }>(
+    "/library/titles/:mediaId/note",
+    async (request, reply) => {
+      const auth = await requireAuth(request, reply);
+
+      if (!auth) {
+        return;
+      }
+
+      try {
+        await removeMediaNote(
+          auth.accessToken,
+          auth.user.id,
+          request.params.mediaId,
+        );
+
+        return reply.status(204).send();
+      } catch (error) {
+        return sendLibraryError(request, reply, error);
+      }
+    },
+  );
 
   app.post<{ Body: LibraryBody }>("/library/watchlist", async (request, reply) => {
     const auth = await requireAuth(request, reply);

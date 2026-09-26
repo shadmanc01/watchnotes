@@ -1,5 +1,7 @@
 import type {
   LibraryMediaReference,
+  LibraryTitleDetail,
+  MediaNote,
   WatchedItem,
   WatchlistItem,
 } from "@watchnotes/shared";
@@ -22,6 +24,10 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
       ...init?.headers,
     },
   });
+
+  if (response.status === 204) {
+    return undefined as T;
+  }
 
   const payload = (await response.json().catch(() => null)) as
     | T
@@ -60,4 +66,29 @@ export function getWatchlist() {
 
 export function getWatched() {
   return request<{ items: WatchedItem[] }>("/library/watched");
+}
+
+export function getTitleDetail(mediaId: string) {
+  return request<{ detail: LibraryTitleDetail }>(
+    `/library/titles/${encodeURIComponent(mediaId)}`,
+  );
+}
+
+export function saveTitleNote(mediaId: string, body: string) {
+  return request<{ note: MediaNote }>(
+    `/library/titles/${encodeURIComponent(mediaId)}/note`,
+    {
+      method: "PUT",
+      body: JSON.stringify({ body }),
+    },
+  );
+}
+
+export function deleteTitleNote(mediaId: string) {
+  return request<void>(
+    `/library/titles/${encodeURIComponent(mediaId)}/note`,
+    {
+      method: "DELETE",
+    },
+  );
 }

@@ -1,4 +1,5 @@
 import type { RankingEntry } from "@watchnotes/shared";
+import Link from "next/link";
 
 type RankingListProps = {
   entries: RankingEntry[];
@@ -15,22 +16,31 @@ export function RankingList({ entries }: RankingListProps) {
         <li className="ranking-row" key={entry.media.id}>
           <strong className="ranking-row__position">#{entry.position}</strong>
 
-          {entry.media.posterUrl ? (
-            <img
-              className="ranking-row__poster"
-              src={entry.media.posterUrl}
-              alt=""
-              width={56}
-            />
-          ) : (
-            <div
-              className="ranking-row__poster poster-placeholder"
-              aria-hidden="true"
-            />
-          )}
+          <Link
+            href={`/title/${entry.media.id}`}
+            aria-label={`Open ${entry.media.title}`}
+          >
+            {entry.media.posterUrl ? (
+              <img
+                className="ranking-row__poster"
+                src={entry.media.posterUrl}
+                alt=""
+                width={56}
+              />
+            ) : (
+              <div
+                className="ranking-row__poster poster-placeholder"
+                aria-hidden="true"
+              />
+            )}
+          </Link>
 
           <div>
-            <strong>{entry.media.title}</strong>
+            <strong>
+              <Link href={`/title/${entry.media.id}`}>
+                {entry.media.title}
+              </Link>
+            </strong>
             {entry.media.releaseYear ? <p>{entry.media.releaseYear}</p> : null}
           </div>
         </li>

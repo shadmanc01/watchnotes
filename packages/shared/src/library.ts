@@ -18,3 +18,25 @@ export type WatchedItem = {
   trackedRuntimeMinutes: number;
   untrackedWatchCount: number;
 };
+
+export type WatchEventSummary = {
+  watchedAt: string;
+  runtimeMinutes: number | null;
+  isRewatch: boolean;
+};
+
+export type MediaNote = {
+  body: string;
+  updatedAt: string;
+};
+
+export type LibraryTitleDetail = {
+  media: MediaSummary;
+  watchCount: number;
+  trackedRuntimeMinutes: number;
+  lastWatchedAt: string | null;
+  watchEvents: WatchEventSummary[];
+  rankingPosition: number | null;
+  note: MediaNote | null;
+  onWatchlist: boolean;
+};
