@@ -7,6 +7,7 @@ import { registerLibraryRoutes } from "./modules/library/library.routes.js";
 import { registerMediaRoutes } from "./modules/media/media.routes.js";
 import { registerProfileRoutes } from "./modules/profiles/profile.routes.js";
 import { registerRankingRoutes } from "./modules/rankings/ranking.routes.js";
+import { registerSocialRoutes } from "./modules/social/social.routes.js";
 
 export function buildApp() {
   const app = Fastify({
@@ -26,6 +27,7 @@ export function buildApp() {
   registerProfileRoutes(app);
   registerLibraryRoutes(app);
   registerRankingRoutes(app);
+  registerSocialRoutes(app);
 
   return app;
 }

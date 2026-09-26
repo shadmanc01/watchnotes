@@ -42,6 +42,14 @@ export function AccountScreen() {
         ) : null}
         <p className="account-card__meta">{user.email}</p>
 
+        {user.profile ? (
+          <div className="inline-links">
+            <Link href={`/u/${user.profile.username}`}>
+              View public profile
+            </Link>
+          </div>
+        ) : null}
+
         <button
           type="button"
           onClick={async () => {
