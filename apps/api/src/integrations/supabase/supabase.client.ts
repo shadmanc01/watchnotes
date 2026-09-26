@@ -24,3 +24,20 @@ export function createSupabaseClient() {
     },
   });
 }
+
+export function createAuthenticatedSupabaseClient(accessToken: string) {
+  const { url, anonKey } = getSupabaseConfig();
+
+  return createClient(url, anonKey, {
+    auth: {
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+      persistSession: false,
+    },
+    global: {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  });
+}

@@ -3,6 +3,7 @@ import cors from "@fastify/cors";
 import Fastify from "fastify";
 import { registerAuthRoutes } from "./modules/auth/auth.routes.js";
 import { registerHealthRoutes } from "./modules/health/health.routes.js";
+import { registerLibraryRoutes } from "./modules/library/library.routes.js";
 import { registerMediaRoutes } from "./modules/media/media.routes.js";
 import { registerProfileRoutes } from "./modules/profiles/profile.routes.js";
 
@@ -21,6 +22,7 @@ export function buildApp() {
   registerMediaRoutes(app);
   registerAuthRoutes(app);
   registerProfileRoutes(app);
+  registerLibraryRoutes(app);
 
   return app;
 }

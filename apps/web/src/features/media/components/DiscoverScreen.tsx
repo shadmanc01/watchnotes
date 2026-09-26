@@ -1,6 +1,7 @@
 "use client";
 
 import type { MediaSummary } from "@watchnotes/shared";
+import Link from "next/link";
 import { useState } from "react";
 import { PageContainer } from "../../../components/layout/PageContainer";
 import { searchMedia } from "../api/searchMedia";
@@ -47,8 +48,13 @@ export function DiscoverScreen() {
         <p>Discover</p>
         <h1>Find something you watched.</h1>
         <p>
-          Search the catalog now. Adding watched, watchlist, ranking, and notes
-          comes in the next milestones.
+          Search movies and TV shows, then mark them watched or save them for
+          later.
+        </p>
+        <p>
+          <Link href="/watched">Watched</Link>
+          {" · "}
+          <Link href="/watchlist">Watchlist</Link>
         </p>
 
         <MediaSearchForm
