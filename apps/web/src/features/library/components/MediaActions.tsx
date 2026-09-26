@@ -40,8 +40,8 @@ export function MediaActions({ media }: MediaActionsProps) {
   }
 
   return (
-    <div style={{ display: "grid", gap: 8 }}>
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+    <div className="media-actions">
+      <div className="media-actions__buttons">
         <button
           type="button"
           disabled={isSaving}

@@ -52,10 +52,10 @@ export function AuthForm({ mode }: AuthFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: "grid", gap: 14, maxWidth: 420 }}>
+    <form className="auth-form" onSubmit={handleSubmit}>
       {isSignup ? (
         <>
-          <label>
+          <label className="field">
             Display name
             <input
               value={displayName}
@@ -63,7 +63,7 @@ export function AuthForm({ mode }: AuthFormProps) {
               autoComplete="name"
             />
           </label>
-          <label>
+          <label className="field">
             Username
             <input
               value={username}
@@ -77,7 +77,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         </>
       ) : null}
 
-      <label>
+      <label className="field">
         Email
         <input
           type="email"
@@ -88,7 +88,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         />
       </label>
 
-      <label>
+      <label className="field">
         Password
         <input
           type="password"
@@ -104,7 +104,11 @@ export function AuthForm({ mode }: AuthFormProps) {
         {isSubmitting ? "Working..." : isSignup ? "Create account" : "Sign in"}
       </button>
 
-      {message ? <p role="status">{message}</p> : null}
+      {message ? (
+        <p className="status-message" role="status">
+          {message}
+        </p>
+      ) : null}
 
       <p>
         {isSignup ? "Already have an account? " : "New to Watchnotes? "}

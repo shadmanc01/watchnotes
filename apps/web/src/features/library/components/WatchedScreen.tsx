@@ -40,30 +40,38 @@ export function WatchedScreen() {
 
   return (
     <PageContainer>
-      <section style={{ maxWidth: 760 }}>
-        <p>Library</p>
-        <h1>Watched</h1>
-        <p>
-          <Link href="/discover">Find a title</Link>
-          {" · "}
-          <Link href="/watchlist">View watchlist</Link>
-          {" · "}
-          <Link href="/rank">Rank watched titles</Link>
+      <section className="content-narrow">
+        <p className="page-kicker">Library</p>
+        <h1 className="page-title">Watched</h1>
+        <p className="page-lede">
+          Your viewing history is the raw material for your ranking.
         </p>
 
+        <div className="inline-links">
+          <Link href="/discover">Find a title</Link>
+          <Link href="/watchlist">View watchlist</Link>
+          <Link href="/rank">Rank watched titles</Link>
+        </div>
+
         {isLoading ? <p>Loading watched titles...</p> : null}
-        {error ? <p role="alert">{error}</p> : null}
+        {error ? (
+          <p className="status-message" role="alert">
+            {error}
+          </p>
+        ) : null}
         {!isLoading && !error && items.length === 0 ? (
           <p>You have not marked anything watched yet.</p>
         ) : null}
 
-        {items.map((item) => (
-          <LibraryMediaRow
-            key={item.media.id}
-            media={item.media}
-            detail={getDetail(item)}
-          />
-        ))}
+        <div className="library-list">
+          {items.map((item) => (
+            <LibraryMediaRow
+              key={item.media.id}
+              media={item.media}
+              detail={getDetail(item)}
+            />
+          ))}
+        </div>
       </section>
     </PageContainer>
   );

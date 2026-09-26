@@ -4,9 +4,10 @@ import { AuthForm } from "./AuthForm";
 export function LoginScreen() {
   return (
     <PageContainer>
-      <section>
-        <p>Watchnotes</p>
-        <h1>Welcome back.</h1>
+      <section className="auth-shell">
+        <p className="page-kicker">Watchnotes</p>
+        <h1 className="page-title">Welcome back.</h1>
+        <p className="page-lede">Pick up where your ranking left off.</p>
         <AuthForm mode="login" />
       </section>
     </PageContainer>

@@ -27,28 +27,35 @@ export function WatchlistScreen() {
 
   return (
     <PageContainer>
-      <section style={{ maxWidth: 760 }}>
-        <p>Library</p>
-        <h1>Watchlist</h1>
-        <p>
+      <section className="content-narrow">
+        <p className="page-kicker">Library</p>
+        <h1 className="page-title">Watchlist</h1>
+        <p className="page-lede">Everything you want to watch next, in one place.</p>
+
+        <div className="inline-links">
           <Link href="/discover">Find something to add</Link>
-          {" · "}
           <Link href="/watched">View watched</Link>
-        </p>
+        </div>
 
         {isLoading ? <p>Loading watchlist...</p> : null}
-        {error ? <p role="alert">{error}</p> : null}
+        {error ? (
+          <p className="status-message" role="alert">
+            {error}
+          </p>
+        ) : null}
         {!isLoading && !error && items.length === 0 ? (
           <p>Your watchlist is empty.</p>
         ) : null}
 
-        {items.map((item) => (
-          <LibraryMediaRow
-            key={item.media.id}
-            media={item.media}
-            detail={`Added ${new Date(item.addedAt).toLocaleDateString()}`}
-          />
-        ))}
+        <div className="library-list">
+          {items.map((item) => (
+            <LibraryMediaRow
+              key={item.media.id}
+              media={item.media}
+              detail={`Added ${new Date(item.addedAt).toLocaleDateString()}`}
+            />
+          ))}
+        </div>
       </section>
     </PageContainer>
   );

@@ -7,38 +7,30 @@ type LibraryMediaRowProps = {
 
 export function LibraryMediaRow({ media, detail }: LibraryMediaRowProps) {
   return (
-    <article
-      style={{
-        display: "grid",
-        gridTemplateColumns: "72px 1fr",
-        gap: 14,
-        padding: "14px 0",
-        borderBottom: "1px solid #ddd",
-      }}
-    >
+    <article className="library-row">
       {media.posterUrl ? (
         <img
+          className="library-row__poster"
           src={media.posterUrl}
           alt=""
           width={72}
-          style={{ width: 72, height: 108, objectFit: "cover" }}
         />
       ) : (
         <div
+          className="library-row__poster poster-placeholder"
           aria-hidden="true"
-          style={{ width: 72, height: 108, background: "#e8e8e8" }}
         />
       )}
 
       <div>
-        <p style={{ margin: 0, fontSize: 12, textTransform: "uppercase" }}>
+        <p className="media-meta">
           {media.type === "movie" ? "Movie" : "TV Show"}
         </p>
-        <h2 style={{ margin: "4px 0" }}>
+        <h2 className="library-row__title">
           {media.title}
           {media.releaseYear ? ` (${media.releaseYear})` : ""}
         </h2>
-        {detail ? <p>{detail}</p> : null}
+        {detail ? <p className="library-row__detail">{detail}</p> : null}
       </div>
     </article>
   );

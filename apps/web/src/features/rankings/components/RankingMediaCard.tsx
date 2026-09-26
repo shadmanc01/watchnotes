@@ -10,52 +10,25 @@ export function RankingMediaCard({
   eyebrow,
 }: RankingMediaCardProps) {
   return (
-    <div
-      style={{
-        display: "grid",
-        gap: 10,
-        justifyItems: "center",
-        textAlign: "center",
-      }}
-    >
+    <div className="ranking-media-card">
       {media.posterUrl ? (
         <img
+          className="ranking-media-card__poster"
           src={media.posterUrl}
           alt=""
           width={180}
-          style={{
-            width: 180,
-            height: 270,
-            objectFit: "cover",
-            borderRadius: 8,
-          }}
         />
       ) : (
         <div
+          className="ranking-media-card__poster poster-placeholder"
           aria-hidden="true"
-          style={{
-            width: 180,
-            height: 270,
-            background: "#e8e8e8",
-            borderRadius: 8,
-          }}
         />
       )}
 
       <div>
-        {eyebrow ? (
-          <p
-            style={{
-              margin: 0,
-              fontSize: 12,
-              textTransform: "uppercase",
-            }}
-          >
-            {eyebrow}
-          </p>
-        ) : null}
-        <h2 style={{ margin: "4px 0" }}>{media.title}</h2>
-        {media.releaseYear ? <p style={{ margin: 0 }}>{media.releaseYear}</p> : null}
+        {eyebrow ? <p className="media-meta">{eyebrow}</p> : null}
+        <h2>{media.title}</h2>
+        {media.releaseYear ? <p>{media.releaseYear}</p> : null}
       </div>
     </div>
   );

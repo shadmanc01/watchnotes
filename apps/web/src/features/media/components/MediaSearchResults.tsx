@@ -19,7 +19,7 @@ export function MediaSearchResults({
   }
 
   return (
-    <section aria-label="Search results">
+    <section className="media-list" aria-label="Search results">
       {results.map((media) => (
         <MediaCard key={media.id} media={media} />
       ))}
